@@ -35,7 +35,8 @@ def predict_url(url: str) -> Dict[str, Any]:
 
     # 1. Extract features
     features_dict = extract_features(url)
-    X: List[List[float]] = [list(features_dict.values())]
+    
+    X: List[List[Any]] = [list(features_dict.values())]
 
     # 2. Predict class
     class_id: int = int(model.predict(X)[0])

@@ -131,36 +131,41 @@ def count_special_chars(url: str) -> dict:
 
 def extract_features(url: str) -> dict:
     """
-    Extract all engineered features for a single URL.
-    Used in API inference or test cases.
+    Extract features for a single URL.
+    Returns a dict with keys in the exact order expected by the model.
     """
     parsed = urlparse(url)
 
+    # 1. Get special character counts (assumes your function returns them in correct order)
+    special_counts = count_special_chars(url)  # ← You said this preserves order
+
     features = {
+        # Core length & content
         "url_length": len(url),
-        "hostname_length": len(parsed.netloc),
+        "hostname_length": len(parsed.hostname or ""),
+
+        # Letter & digit counts
         "count_letters": letter_count(url),
         "count_digits": digit_count(url),
-        "count_www": url.count("www"),
 
-        # domain / security-related
-        "has_ip": having_ip_address(url),
-        "abnormal_url": abnormal_url(url),
-        "short_url": shortening_service(url),
-        "https": http_secure(url),
+        # Special characters 
+        **special_counts, 
 
-        # structure
+        # Structural features
+        "count_slashes": url.count("//"),
+        "count_www": url.lower().count("www"),
+
+        # Binary & derived features
+        "has_ip": int(having_ip_address(url)),
+        "abnormal_url": int(abnormal_url(url)),
+        "short_url": int(shortening_service(url)),
+        "https": int(http_secure(url)),
         "count_dir": count_directories(url),
         "count_embed_domain": count_embedded_domains(url),
         "fd_length": first_dir_length(url),
         "tld_length": tld_length(url),
-
-        # suspicious content
-        "suspicious": suspicious_words(url),
+        "suspicious": int(suspicious_words(url)),
     }
-
-    # add special character counts
-    features.update(count_special_chars(url))
 
     return features
 
