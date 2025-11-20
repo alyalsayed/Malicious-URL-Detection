@@ -124,6 +124,16 @@ A `RandomForestClassifier` with tuned hyperparameters:
    └──────────────────┘
 ```
 ---
+## 📓 Jupyter Notebook: Full EDA & Experiments
+
+The project's foundation was built in this interactive **Kaggle Notebook**, where we performed comprehensive **Exploratory Data Analysis (EDA)**, feature engineering experiments, baseline modeling, and hyperparameter tuning trials.
+
+**[Open Notebook on Kaggle](https://www.kaggle.com/code/alyalsayed/malicious-url-detection)**  
+*(Fork it, run it, and experiment! No setup required — datasets and environment are pre-loaded.)*
+
+
+
+
 
 ## Project Structure
 
