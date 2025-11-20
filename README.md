@@ -186,6 +186,38 @@ We evaluated **8 different algorithms** on the same train/test split (80/20) usi
 - No need for feature scaling
 - Robust to overfitting with proper tuning
 
+## 📊 Visualizations & Results
+
+### 1. Class Distribution
+![Class Distribution](assets/class_distribution.png)
+*Benign URLs dominate (~66%), with phishing and defacement being the most common malicious types.*
+
+### 2. Distribution of URL Length by Class
+![URL Length Distribution](assets/url_length_distribution.png)
+*Malicious URLs (especially phishing & defacement) tend to be significantly longer than benign ones.*
+
+### 3. Top 20 Feature Importances – Random Forest
+![Feature Importance](assets/feature_importance_top20.png)
+*Key indicators: presence of suspicious keywords, URL length, number of subdomains, special characters, etc.*
+
+### 4. Confusion Matrix – Final Random Forest Model (Test Set)
+![Confusion Matrix](assets/confusion_matrix.png)
+*Excellent performance across all classes — very few false negatives on malware and phishing.*
+
+### 5. FASTAPI Swagger
+![API Response](assets/fastapi.PNG)
+
+### 6. API Request health Example
+![API Request](assets/api_request_example.png)
+
+### 7. API Request predict Example
+![API Response](assets/api_response_example.png)
+*Real-time prediction with class probabilities returned in < 10ms.*
+
+---
+
+**All visualizations were generated using Matplotlib, Seaborn, and FastAPI Swagger UI screenshots.**
+
 ## 🚀 How to Run Locally
 
 1️⃣ **Create and activate a virtual environment**
