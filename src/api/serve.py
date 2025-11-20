@@ -7,7 +7,7 @@ Defines:
 """
 
 import logging
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import uvicorn
 
 from src.api.schemas import URLRequest, URLPrediction
@@ -33,6 +33,17 @@ app = FastAPI(
 
 
 # --------------------------------------------------------
+# Health Check Endpoint
+# --------------------------------------------------------
+@app.get("/health")
+def health_check():
+    """
+    Simple health check endpoint that returns 200 OK.
+    """
+    return {"status": "ok"}
+
+
+# --------------------------------------------------------
 # Prediction Endpoint
 # --------------------------------------------------------
 @app.post("/predict", response_model=URLPrediction)
@@ -41,8 +52,12 @@ def predict_endpoint(request: URLRequest):
     API endpoint that receives a URL and returns model prediction.
     """
     logger.info(f"Received URL for prediction: {request.url}")
-    result = predict_url(request.url)
-    return URLPrediction(**result)
+    try:
+        result = predict_url(request.url)
+        return URLPrediction(**result)
+    except Exception as e:
+        logger.error(f"Prediction failed for URL {request.url}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
 
 # --------------------------------------------------------
