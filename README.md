@@ -312,19 +312,27 @@ curl -X POST http://localhost:8000/predict \
 **Build the image:**
 
 ```bash
-docker build -t url-detector .
+docker-compose build
 ```
 
-**Run container:**
+**Start both services (API first, GUI waits for it)**
 
 ```bash
-docker run -p 8000:8000 url-detector
+docker-compose up -d
 ```
+### Verify services:
+```bash
+docker-compose ps
+```
+-  ✅ url-detector-api: healthy (port 8000)
+- ✅ url-detector-gui: running (port 8501)
 
+###  Open the GUI in your browser
+👉 http://localhost:8501
 ## 🛠️ Next Steps
 
 - Add model monitoring + drift detection
-- Create a web UI dashboard
+
 - Support batch predictions
 - Deploy with Docker + K8s + CI/CD
 

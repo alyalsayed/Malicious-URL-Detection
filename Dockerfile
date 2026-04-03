@@ -1,61 +1,30 @@
-# ============================================================
-#               STAGE 1 — Build Dependencies
-# ============================================================
-FROM python:3.11-slim AS builder
-
-WORKDIR /app
-
-# Install system dependencies required for building Python wheels
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy only requirements for efficient caching
-COPY requirements.txt .
-
-# Create a virtual environment inside /opt/venv
-RUN python -m venv /opt/venv
-
-# Activate venv & install dependencies
-RUN /opt/venv/bin/pip install --no-cache-dir --upgrade pip \
-    && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
-
-
-# ============================================================
-#               STAGE 2 — Final Runtime Image
-# ============================================================
+# Minimal single-stage Dockerfile
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copy the Python virtual environment from builder
-COPY --from=builder /opt/venv /opt/venv
-
-# Ensure venv is used
-ENV PATH="/opt/venv/bin:$PATH"
-
-# Install curl for healthcheck
+# Install runtime deps only
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Copy project code
+# Install Python packages
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip uninstall -y pip setuptools wheel
+
+# Copy app code (respects .dockerignore)
 COPY src/ src/
 COPY models/ models/
-COPY data/ data/
-COPY model_metadata.json model_metadata.json
+# COPY model_metadata.json .
 
-# Expose FastAPI port
-EXPOSE 8000
-
-# Health check endpoint
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
-
-# Non-root safety
-RUN useradd -m appuser
+# Non-root user for security
+RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 
-# Start FastAPI via Uvicorn (best practice)
-CMD ["uvicorn", "src.api.serve:app", "--host", "0.0.0.0", "--port", "8000"]
+# Expose both ports
+EXPOSE 8000 8501
+
+# Default command (overridden by docker-compose)
+# CMD ["uvicorn", "src.api.serve:app", "--host", "0.0.0.0", "--port", "8000"]
