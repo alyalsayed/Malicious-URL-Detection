@@ -327,16 +327,16 @@ docker-compose ps
 -  ✅ url-detector-api: healthy (port 8000)
 - ✅ url-detector-gui: running (port 8501)
 ### Docker Container & image
-![API Request](assets/docker_1.png)
-![API Request](assets/docker_2.png)
+![API Request](assets/docker_1.PNG)
+![API Request](assets/docker_2.PNG)
 
 ###  Open the GUI in your browser
 👉 http://localhost:8501
 
 ### Streamlit GUI
-![API Request](assets/streamlit_1.png)
-![API Request](assets/streamlit_2.png)
-![API Request](assets/streamlit_3.png)
+![Streamlit GUI](assets/streamlit_1.PNG)
+![Streamlit GUI](assets/streamlit_2.PNG)
+![Streamlit GUI](assets/streamlit_3.PNG)
 
 ## 🛠️ Next Steps
 
